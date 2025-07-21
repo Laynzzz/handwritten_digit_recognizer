@@ -15,36 +15,21 @@ import time
 
 # Do not change this
 def initializeWeights(n_in,n_out):
-    """
-    # initializeWeights return the random weights for Neural Network given the
-    # number of node in the input layer and output layer
-
-    # Input:
-    # n_in: number of nodes of the input layer
-    # n_out: number of nodes of the output layer
-                            
-    # Output: 
-    # W: matrix of random initial weights with size (n_out x (n_in + 1))"""
     epsilon = sqrt(6) / sqrt(n_in + n_out + 1)
     #np.random.seed(42)
     W = (np.random.rand(n_out, n_in + 1)*2* epsilon) - epsilon
     return W
 
-
-
-# Replace this with your sigmoid implementation
 def sigmoid(z):
     return 1 / (1 + np.exp(-np.array(z)))
-    
-# Replace this with your nnObjFunction implementation
+
 def nnObjFunction(params, *args):
     n_input, n_hidden, n_class, training_data, training_label, lambdaval = args
 
     w1 = params[0:n_hidden * (n_input + 1)].reshape((n_hidden, (n_input + 1)))
     w2 = params[(n_hidden * (n_input + 1)):].reshape((n_class, (n_hidden + 1)))
     obj_val = 0
-    # Feedforward propogation section from documentation
-    # First transformation from input layer to hidden layer 
+
     biasTerms = np.ones((training_data.shape[0], 1)) # Create bias terms for data
     training_data_with_bias = np.concatenate((biasTerms, training_data), axis=1) # Add bias terms to data
     z_j = sigmoid(np.dot(training_data_with_bias, w1.T)) # Calculate z values by applying activation function to a_j (the dot product of the training data with bias and the weights (units) of the hidden layer)
@@ -81,17 +66,12 @@ def nnObjFunction(params, *args):
     vectorized_dj_dw1 = dj_dw1.flatten()
     vectorized_dj_dw2 = dj_dw2.flatten()  
 
-    # Make sure you reshape the gradient matrices to a 1D array. for instance if your gradient matrices are grad_w1 and grad_w2
-    # you would use code similar to the one below to create a flat array
-    # obj_grad = np.concatenate((grad_w1.flatten(), grad_w2.flatten()),0)
     obj_grad = np.array([])
-
-    # As stated above, we can concatenate the two vectors to form a single vector.
     obj_grad = np.concatenate((vectorized_dj_dw1, vectorized_dj_dw2),0)
-    # Return the value of the error function and the gradient of the error function.
+
     return (obj_val, obj_grad)
     
-# Replace this with your nnPredict implementation
+
 def nnPredict(w1,w2,data):
 
     biasTerms = np.ones((data.shape[0], 1))
@@ -107,7 +87,6 @@ def nnPredict(w1,w2,data):
 
     return labels
 
-# Do not change this
 def preprocess():
     pickle_obj = pickle.load(file=open('face_all.pickle', 'rb'))
     features = pickle_obj['Features']
@@ -122,9 +101,9 @@ def preprocess():
     test_y = labels[23765:]
     return train_x, train_y, valid_x, valid_y, test_x, test_y
 
-#**************Original Neural Network Script Starts here********************************
+
 train_data, train_label, validation_data, validation_label, test_data, test_label = preprocess()
-#  Train Neural Network
+
 # set the number of nodes in input unit (not including bias unit)
 n_input = train_data.shape[1]
 # set the number of nodes in hidden unit (not including bias unit)
@@ -141,7 +120,7 @@ initialWeights = np.concatenate((initial_w1.flatten(), initial_w2.flatten()),0)
 lambdaval = 30
 args = (n_input, n_hidden, n_class, train_data, train_label, lambdaval)
 
-#Train Neural Network using fmin_cg or minimize from scipy,optimize module. Check documentation for a working example
+#Train Neural Network using fmin_cg or minimize from scipy,optimize module. 
 opts = {'maxiter' :50}    # Preferred value.
 
 nn_params = minimize(nnObjFunction, initialWeights, jac=True, args=args,method='CG', options=opts)

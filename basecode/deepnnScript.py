@@ -10,9 +10,7 @@ import numpy as np
 import pickle
 
 
-# Create model
-# Add more hidden layers to create deeper networks
-# Remember to connect the final hidden layer to the out_layer
+
 def create_multilayer_perceptron():
 
     class net(nn.Module):
@@ -47,7 +45,7 @@ def create_multilayer_perceptron():
 
     return net()
 
-# Do not change this
+
 def preprocess():
     pickle_obj = pickle.load(file=open('face_all.pickle', 'rb'))
     features = pickle_obj['Features']
@@ -120,25 +118,19 @@ learning_rate = 0.0001
 training_epochs = 50
 batch_size = 100
 
-# Get cpu or gpu device for training.
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using {device} device")
 
-# Construct model
 model = create_multilayer_perceptron().to(device)
 
-# Define loss and openptimizer
 cost = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
-# load data
 trainset, validset, testset = preprocess()
 train_dataloader = DataLoader(trainset, batch_size=batch_size, shuffle=True)
 valid_dataloader = DataLoader(validset, batch_size=batch_size, shuffle=False)
 test_dataloader = DataLoader(testset, batch_size=batch_size, shuffle=False)
 
-
-# Training cycle
 for t in range(training_epochs):
     print(f"Epoch {t+1}\n-------------------------------")
     train(train_dataloader, model, cost, optimizer)

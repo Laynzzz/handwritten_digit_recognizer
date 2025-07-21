@@ -1,4 +1,3 @@
-# matplotlib inline
 import matplotlib.pyplot as plt
 import torch
 from torch import nn
@@ -12,10 +11,8 @@ import time
 from datetime import timedelta
 
 
-# We know that MNIST images are 28 pixels in each dimension.
-img_size = 28
 
-# Tuple with height and width of images used to reshape arrays.
+img_size = 28
 img_shape = (img_size, img_size)
 
 def create_cnn():
@@ -23,21 +20,20 @@ def create_cnn():
         def __init__(self):
             super().__init__()
 
-            # Convolutional Layer 1.
-            filter_size1 = 5  # Convolution filters are 5 x 5 pixels.
-            num_filters1 = 16  # There are 16 of these filters.
+            filter_size1 = 5  # Convolution filters: 5 x 5 pixels.
+            num_filters1 = 16  # 16 Convolution layer
 
             # Convolutional Layer 2.
-            filter_size2 = 5  # Convolution filters are 5 x 5 pixels.
-            num_filters2 = 36  # There are 36 of these filters.
+            filter_size2 = 5
+            num_filters2 = 36  # 36 convolution layer
 
             # Fully-connected layer.
             fc_size = 128
 
-            # Number of colour channels for the images: 1 channel for gray-scale.
+            # 1 channel for gray-scale.
             num_channels = 1
 
-            # Number of classes, one class for each of 10 digits.
+            # 10 class for each of 10 digits.
             num_classes = 10
 
             self.layer_conv1 = nn.Conv2d(num_channels, num_filters1, (filter_size1, filter_size1), padding='same')
@@ -63,7 +59,7 @@ def train(dataloader, model, loss_fn, optimizer):
     for batch, (X, y) in enumerate(dataloader):
         X, y = X.to(device), y.to(device)
 
-        # Compute prediction error
+        # prediction error
         pred = model(X.float())
         loss = loss_fn(pred, y)
 
@@ -80,7 +76,7 @@ def train(dataloader, model, loss_fn, optimizer):
 def plot_images(images, cls_true, cls_pred=None):
     assert len(images) == len(cls_true) == 9
 
-    # Create figure with 3x3 sub-plots.
+    # figure with 3x3 sub-plots.
     fig, axes = plt.subplots(3, 3)
     fig.subplots_adjust(hspace=0.3, wspace=0.3)
 
@@ -101,16 +97,10 @@ def plot_images(images, cls_true, cls_pred=None):
         ax.set_xticks([])
         ax.set_yticks([])
 
-    # Ensure the plot is shown correctly with multiple plots
-    # in a single Notebook cell.
     plt.show()
 
 
 def plot_confusion_matrix(cls_pred, cls_true):
-    # This is called from test() below.
-
-    # cls_pred is an list of the predicted class-number for
-    # all images in the test-set.
 
     # Get the confusion matrix using sklearn.
     cm = confusion_matrix(y_true=cls_true,
@@ -130,8 +120,6 @@ def plot_confusion_matrix(cls_pred, cls_true):
     plt.xlabel('Predicted')
     plt.ylabel('True')
 
-    # Ensure the plot is shown correctly with multiple plots
-    # in a single Notebook cell.
     plt.show()
 
 
@@ -198,7 +186,6 @@ learning_rate = 1e-4
 train_batch_size = 64
 test_batch_size = 256
 
-# Get cpu or gpu device for training.
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using {device} device")
 
